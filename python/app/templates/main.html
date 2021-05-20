@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+
+<head>
+    <title>Speech to text converter in JS</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css"/>
+    <style tyle="text/css">
+        body{
+            font-family:verdana;
+        }
+        #result{
+            height:200px;
+            border:1px solid #ccc;
+            padding:10px;
+            box-shadow: 0 0 10px 0 #bbb;
+            margin-bottom: 30px;
+            font-size: 14px;
+            line-height: 25px;
+        }
+        button{
+            font-size:20px;
+            position: absolute;
+            top:240px;
+            left:50%;
+        }
+    </style>
+</head>
+
+    <h4 align="center">Speech to text converter in JS</h4>
+    <div id="result"></div>
+    <button onClick="startConverting();" type="button"><i class="fa fa-microphone"></i></button>
+
+<script type="text/javascript">
+
+//insert in html
+var r=document.getElementById('result');
+
+function startConverting ()
+{
+        //이 브라우저가 크롬인지 확인합니다. 이 응용 프로그램은 크롬 브라우저에서만 지원되기 때문에
+
+        if('webkitSpeechRecognition'in window){
+            // 웹 음성 API 기능
+            var speechRecognizer = new webkitSpeechRecognition();
+            // continuous : 한 번만 마이크를 잡을지 여부
+            speechRecognizer.continuous = true;
+            // interimResults : 마이크를 캡처하는 동안 결과를 보내거나 보내지 않습니다.
+            speechRecognizer.interimResults = true;
+            // lang : 언어 (ko-KR : 한국어, en-IN : 영어)
+            speechRecognizer.lang="ko-KR";
+            //start!
+            speechRecognizer.start();
+
+            var finalTranscripts = '';
+
+            // 음성 포착 결과 함수가 시작되는 경우
+            speechRecognizer.onresult=function(event){
+                var interimTranscripts='';
+                for(var i=event.resultIndex; i < event.results.length; i++)
+                {
+                    var transcript=event.results[i][0].transcript;
+                    transcript.replace("\n","<br>");
+
+                    // isFinal : 음성 인식이 완료되면 isFinal = true
+                    if(event.results[i].isFinal){
+                        finalTranscripts+=transcript;
+                    }
+                    else{
+                        interimTranscripts+=transcript;
+                    }
+                }
+                // HTML에 삽입
+                r.innerHTML=finalTranscripts+'<span style="color:#999">'+interimTranscripts+'</span>';
+            };
+            speechRecognizer.onerror = function(event){
+            };
+        }
+        else{
+            // 브라우저가이 기능을 지원하지 않는 경우. 이 메시지는 웹에 표시됩니다.
+            r.innerHTML ="your browser is not supported. If google chrome. Please upgrade!";
+        }
+    }
+</script>
