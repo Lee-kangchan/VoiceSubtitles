@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="assets/css/Block-Responsive-Item-List.css">
+    <link rel="stylesheet" href="assets/css/Dynamically-Queue-Videos.css">
+    <link rel="stylesheet" href="assets/css/Header---Apple.css">
+    <link rel="stylesheet" href="assets/css/header-1.css">
+    <link rel="stylesheet" href="assets/css/header-2.css">
+    <link rel="stylesheet" href="assets/css/header.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="assets/css/mloureiro1973-login.css">
+    <link rel="stylesheet" href="assets/css/mloureiro1973-login-1.css">
+    <link rel="stylesheet" href="assets/css/Modern-Contact-Form.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark navbar-expand-md bg-dark">
+        <div class="container"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="navbar-nav flex-grow-1 justify-content-between">
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-television apple-logo"></i></a></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"><a class="nav-link" href="#"></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" style="width: 0.375px;height: 2px;font-size: 24px;padding: 1px;"><i class="icon ion-plus-circled" style="width: 0px;"></i></a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-user" style="width: 0.29688px;height: 0px;font-size: 25px;"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid" id="dqv">
+        <h1>Dynamically Queue Videos</h1>
+        <div class="row">
+            <div class="col-sm-8 col-md-7 col-lg-6">
+                <div id="video-placeholder"><img class="img-fluid" src="assets/img/video_place_holder.jpg"></div>
+                <div class="row">
+                    <div class="col-sm-7 col-md-6 col-lg-6 controls"><i class="material-icons skip_previous" id="prev"></i><i class="material-icons pause" id="pause"></i><i class="material-icons play_arrow" id="play"></i><i class="material-icons skip_next" id="next"></i><i class="material-icons volume_up" id="mute-toggle"></i><input class="form-range dqv-range vol" type="range" id="volume-input" min="0" max="100" step="1">
+                        <div>
+                            <div class="dqv-range dur"><span id="current-time">0:00</span><span> / </span><span id="duration">0:00</span></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 col-md-6 col-lg-6 controls"><input class="form-range dqv-range prog" type="range" id="progress-bar" value="0"></div>
+                </div>
+            </div>
+            <div class="col"><textarea style="max-width: 100%;width: 100%;height: 100%;"></textarea></div>
+        </div>
+    </div>
+    <section class="getintouch"></section>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/Dynamically-Queue-Videos.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+
+</html>
