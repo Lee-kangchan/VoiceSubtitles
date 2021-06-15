@@ -11,12 +11,86 @@
 <div>
   <div style="float: left">
       <video autoplay playsinline></video>
+      <canvas style="visibility: hidden"></canvas>
+
   </div>
   <div style="float:right;width: 50%">
       <div class="words" contenteditable>
   </div>
+      <div>
+
+
+      <select id="smile" name="browsers">
+        <option value="red">빨강</option>
+        <option value="blue">파랑</option>
+        <option value="green">초록</option>
+        <option value="purple">보라</option>
+        <option value="g">갈색</option>
+        <option value="black">검정</option>
+        </select>
+      Sad
+       <select id="sad" name="browsers">
+        <option value="red">빨강</option>
+        <option value="blue">파랑</option>
+        <option value="green">초록</option>
+        <option value="purple">보라</option>
+        <option value="g">갈색</option>
+        <option value="black">검정</option>
+        </select><br>
+      Angry
+       <select id="browsers" name="browsers">
+        <option value="red">빨강</option>
+        <option value="blue">파랑</option>
+        <option value="green">초록</option>
+        <option value="purple">보라</option>
+        <option value="g">갈색</option>
+        <option value="black">검정</option>
+        </select><br>
+      Surprise
+       <select id="Surprise" name="browsers">
+        <option value="red">빨강</option>
+        <option value="blue">파랑</option>
+        <option value="green">초록</option>
+        <option value="purple">보라</option>
+        <option value="g">갈색</option>
+        <option value="black">검정</option>
+       </select><br>
+      Nervous
+       <select id="Stressful" name="browsers">
+        <option value="red">빨강</option>
+        <option value="blue">파랑</option>
+        <option value="green">초록</option>
+        <option value="purple">보라</option>
+        <option value="g">갈색</option>
+        <option value="black">검정</option>
+       </select><br>
+      Venomous
+      <select id="Venomous" name="browsers">
+        <option value="red">빨강</option>
+        <option value="blue">파랑</option>
+        <option value="green">초록</option>
+        <option value="purple">보라</option>
+        <option value="g">갈색</option>
+        <option value="black">검정</option>
+       </select><br>
+      default
+       <select id="default" name="browsers">
+        <option value="red">빨강</option>
+        <option value="blue">파랑</option>
+        <option value="green">초록</option>
+        <option value="purple">보라</option>
+        <option value="g">갈색</option>
+        <option value="black">검정</option>
+        </select><br>
+      dB
+      <input type="text">
+      </div>
 </div>
 <script>
+    const $video = document.getElementById('video');
+    const $canvas = document.getElementById('canvas');
+    const width = 350;
+    const height = 260;
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   let recognition = new SpeechRecognition();
@@ -74,7 +148,8 @@
   };
 
   recognition.onresult = function(e) {
-  
+
+    let start = new Date().getTime();  // 시작
     let texts = Array.from(e.results)
             .map(results => results[0].transcript).join("");
 
@@ -97,7 +172,14 @@
 
             }
             let result = "";
-            for(i = 0 ; i < texts_arr.length; i++){
+            for(i = 0 ; i < texts_arr.length; i++) {
+                if (i > 0) {
+
+                    if (texts_arr[i - 1] == texts_arr[i]){
+
+                    }
+
+                }
               result += texts_arr[i]+ " ";
             }
             p.innerHTML = result.replaceAll("undefined", "");
@@ -107,6 +189,10 @@
             alert(error);
         }
     })
+
+    let end = new Date().getTime();  // 종료
+
+    console.log("경과 시간 : " + end +" "+ start); // 경과시간(밀리초)
   };
 </script>
 
