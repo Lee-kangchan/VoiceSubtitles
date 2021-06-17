@@ -8,20 +8,21 @@ from uuid import uuid4
 import os
 
 
-def faceEmotion(image):
+def faceEmotion():
     # 얼굴 감지 XML로드 및 훈련 된 모델로드
-    emotion_classifier = load_model(os.getcwd() + '/faceEmotion/files/emotion_model.hdf5', compile=False)
-    face_detection = cv2.CascadeClassifier(os.getcwd() + '/faceEmotion/files/haarcascade_frontalface_default.xml')
+    emotion_classifier = load_model(os.getcwd() + '/module/faceEmotion/files/emotion_model.hdf5', compile=False)
+    face_detection = cv2.CascadeClassifier(os.getcwd() + '/module/faceEmotion/files/haarcascade_frontalface_default.xml')
 
     EMOTIONS = ["Angry", "Disgusting", "Fearful", "Happy", "Sad", "Surpring", "Neutral"]
-
+    camera = cv2.VideoCapture(0)
     while True:
         # 카메라에서 이미지 캡처
-        gray = cv2.imdecode(image, cv2.IMREAD_GRAYSCALE);
-        # ret, frame = camera.read()
+        #gray = cv2.imdecode(image, cv2.IMREAD_GRAYSCALE);
+        ret, frame = camera.read()
 
         # 색상을 그레이 스케일로 변환
-        # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # 프레임 내 얼굴 인식
         faces = face_detection.detectMultiScale(gray,
@@ -40,7 +41,6 @@ def faceEmotion(image):
             roi = roi.astype("float") / 255.0
             roi = img_to_array(roi)
             roi = np.expand_dims(roi, axis=0)
-
             # 감정 예측
             preds = emotion_classifier.predict(roi)[0]
             emotion_probability = np.max(preds)
@@ -53,21 +53,8 @@ def faceEmotion(image):
             Sad = preds[4]
             Surprise = preds[5]
             Neutral = preds[6]
-            print("동작중입니다.")
-            if (Fearful > ave):
-                print("Angry", Angry);
-                print("Disgusting", Disgusting)
-                print("Fearful", Fearful)
-                print("Happy", Happy)
-                print("Sad", Sad)
-                print("Surprise", Surprise)
-                print("Neutral", Neutral)
 
-                return 'no', float(Fearful), float(Angry), float(Disgusting), float(Happy), float(Sad), float(Surprise), float(Neutral)
+            return float(Fearful), float(Angry), float(Disgusting), float(Happy), float(Sad), float(Surprise), float(Neutral)
 
-            else:
-                return 'yes', float(Fearful), float(Angry), float(Disgusting), float(Happy), float(Sad), float(Surprise), float(Neutral)
         else:
-            return 'no', 0, 0, 0, 0, 0, 0, 0
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+            return 0, 0, 0, 0, 0, 0, 0

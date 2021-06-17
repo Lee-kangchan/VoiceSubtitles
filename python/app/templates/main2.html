@@ -9,29 +9,13 @@
 </head>
 <body>
 <div>
-  <div style="float: left">
-      <video autoplay playsinline></video>
-      <canvas style="visibility: hidden"></canvas>
-
-  </div>
-  <div style="float:right;width: 50%">
-      <div class="words" contenteditable>
-  </div>
-      <div>
-
-
-      <select id="smile" name="browsers">
-        <option value="red">빨강</option>
-        <option value="blue">파랑</option>
-        <option value="green">초록</option>
-        <option value="purple">보라</option>
-        <option value="g">갈색</option>
-        <option value="black">검정</option>
-        </select>
+  <video id="video" width="720" height="560" autoplay muted></video>
+  <canvas id="canvas" style="visibility: hidden"></canvas>
+    <div>
       Sad
        <select id="sad" name="browsers">
         <option value="red">빨강</option>
-        <option value="blue">파랑</option>
+        <option selected value="blue">파랑</option>
         <option value="green">초록</option>
         <option value="purple">보라</option>
         <option value="g">갈색</option>
@@ -39,7 +23,7 @@
         </select><br>
       Angry
        <select id="browsers" name="browsers">
-        <option value="red">빨강</option>
+        <option selected value="red">빨강</option>
         <option value="blue">파랑</option>
         <option value="green">초록</option>
         <option value="purple">보라</option>
@@ -50,7 +34,7 @@
        <select id="Surprise" name="browsers">
         <option value="red">빨강</option>
         <option value="blue">파랑</option>
-        <option value="green">초록</option>
+        <option selected value="green">초록</option>
         <option value="purple">보라</option>
         <option value="g">갈색</option>
         <option value="black">검정</option>
@@ -60,37 +44,72 @@
         <option value="red">빨강</option>
         <option value="blue">파랑</option>
         <option value="green">초록</option>
-        <option value="purple">보라</option>
-        <option value="g">갈색</option>
-        <option value="black">검정</option>
-       </select><br>
-      Venomous
-      <select id="Venomous" name="browsers">
-        <option value="red">빨강</option>
-        <option value="blue">파랑</option>
-        <option value="green">초록</option>
-        <option value="purple">보라</option>
+        <option selected value="purple">보라</option>
         <option value="g">갈색</option>
         <option value="black">검정</option>
        </select><br>
       default
        <select id="default" name="browsers">
-        <option value="red">빨강</option>
+        <option  value="red">빨강</option>
         <option value="blue">파랑</option>
         <option value="green">초록</option>
         <option value="purple">보라</option>
         <option value="g">갈색</option>
-        <option value="black">검정</option>
+        <option selected value="black">검정</option>
         </select><br>
       dB
-      <input type="text">
+      <input type="text" value ="80" id="dB">
       </div>
+  <div style="float:right;width: 50%">
+      <div class="words" contenteditable>
+  </div>
+
 </div>
+</div>
+</body>
+
+<script src="{{url_for('static', filename = 'assets/js/face-api.min.js') }}"></script>
 <script>
-    const $video = document.getElementById('video');
-    const $canvas = document.getElementById('canvas');
-    const width = 350;
-    const height = 260;
+const video = document.getElementById("video");
+
+var emotion = "black"
+Promise.all([
+  faceapi.nets.tinyFaceDetector.loadFromUri("/static/assets/models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("/static/assets/models"),
+  faceapi.nets.faceRecognitionNet.loadFromUri("/static/assets/models"),
+  faceapi.nets.faceExpressionNet.loadFromUri("/static/assets/models"),
+]).then(startVideo);
+
+function startVideo() {
+  navigator.mediaDevices
+    .getUserMedia({ video: true })
+    .then(function (stream) {
+      video.srcObject = stream;
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+}
+
+video.addEventListener("playing", () => {
+  const canvas = faceapi.createCanvasFromMedia(video);
+  document.body.append(canvas);
+  const displaySize = { width: video.width, height: video.height };
+  faceapi.matchDimensions(canvas, displaySize);
+
+})
+
+    var canvas = document.getElementById("canvas")
+        if (navigator.mediaDevices.getUserMedia) {
+          navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+              video.srcObject = stream;
+            })
+            .catch(function (err0r) {
+              console.log("Something went wrong!");
+            });
+        }
+
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   let recognition = new SpeechRecognition();
@@ -106,35 +125,6 @@
   };
 
   let p = null;
-'use strict';
-  <!--비디오 -->
-  // On this codelab, you will be streaming only video (video: true).
-  const mediaStreamConstraints = {
-    video: true,
-  };
-
-  // Video element where stream will be placed.
-  const localVideo = document.querySelector('video');
-
-  // Local stream that will be reproduced on the video.
-  let localStream;
-
-  // Handles success by adding the MediaStream to the video element.
-  function gotLocalMediaStream(mediaStream) {
-    localStream = mediaStream;
-    localVideo.srcObject = mediaStream;
-  }
-
-  // Handles error by logging a message to the console with the error message.
-  function handleLocalMediaStreamError(error) {
-    console.log('navigator.getUserMedia error: ', error);
-  }
-
-  // Initializes media stream.
-  navigator.mediaDevices.getUserMedia(mediaStreamConstraints)
-    .then(gotLocalMediaStream).catch(handleLocalMediaStreamError);
-  <!---->
-
 
   recognition.start();
   recognition.onstart = function() {
@@ -154,29 +144,53 @@
             .map(results => results[0].transcript).join("");
 
     texts.replace(/느낌표|강조|뿅/gi, '❗️');
-
-    data2 = texts.split(" ")
-    len = data2.length-1;
+    var data2 = texts.split(" ")
+    var len = data2.length-1;
     texts_arr[len] = data2[len];
+
+    setTimeout(async () => {
+    const detections = await faceapi
+      .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceExpressions();
+    console.log(detections[0].expressions.neutral);
+    var happy = detections[0].expressions.happy
+    var angry = detections[0].expressions.angry
+    var sad = detections[0].expressions.sad
+    var surprised = detections[0].expressions.surprised
+    var neural = detections[0].expressions.neutral
+    if(happy > 0.3){
+            emotion = "red"
+    } else if(angry > 0.3){
+        emotion = "purple"
+    } else if(sad > 0.3){
+        emotion = "blue"
+    } else if(surprised > 0.3){
+        emotion = "green"
+    } else {
+        emotion = "black"
+    }
+  }, 10);
     $.ajax({
         type: 'GET',
         url: '/test3',
         dataType : 'JSON',
-        contentType: "application/json",
         success: function(data){
             console.log(data.result);
 
-            if(data.result > 60){
-              texts_arr[len] = "<span style=\'color:red\'>" + texts_arr[len] + "</span>";
+            var dB = document.getElementById("dB").value
+            if(data.result > dB){
+              texts_arr[len] = "<span style=\'font-size:medium;color:"+emotion +"\'>" + texts_arr[len] + "</span>";
             }else{
 
+              texts_arr[len] = "<span style=\'font-size:small;color:"+emotion +"\'>" + texts_arr[len] + "</span>";
             }
             let result = "";
             for(i = 0 ; i < texts_arr.length; i++) {
                 if (i > 0) {
 
                     if (texts_arr[i - 1] == texts_arr[i]){
-
+                        texts_arr.pop
                     }
 
                 }
@@ -238,5 +252,4 @@
     }
   </style>
 
-</body>
 </html>

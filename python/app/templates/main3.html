@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Display Webcam Stream</title>
+
+<style>
+#container {
+	margin: 0px auto;
+	width: 500px;
+	height: 375px;
+	border: 10px #333 solid;
+}
+#videoElement {
+	width: 500px;
+	height: 375px;
+	background-color: #666;
+}
+</style>
+</head>
+
+<body>
+  <video id="video" width="720" height="560" autoplay muted></video>
+
+	<input id="text" type="text">
+</body>
+
+<script src="{{url_for('static', filename = 'assets/js/face-api.min.js') }}"></script>
+<script>
+const video = document.getElementById("video");
+
+Promise.all([
+  faceapi.nets.tinyFaceDetector.loadFromUri("/static/assets/models"),
+  faceapi.nets.faceLandmark68Net.loadFromUri("/static/assets/models"),
+  faceapi.nets.faceRecognitionNet.loadFromUri("/static/assets/models"),
+  faceapi.nets.faceExpressionNet.loadFromUri("/static/assets/models"),
+]).then(startVideo);
+
+function startVideo() {
+  navigator.mediaDevices
+    .getUserMedia({ video: true })
+    .then(function (stream) {
+      video.srcObject = stream;
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+}
+
+video.addEventListener("playing", () => {
+  const canvas = faceapi.createCanvasFromMedia(video);
+  document.body.append(canvas);
+  const displaySize = { width: video.width, height: video.height };
+  faceapi.matchDimensions(canvas, displaySize);
+  setInterval(async () => {
+    const detections = await faceapi
+      .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceExpressions();
+    const resizedDetections = faceapi.resizeResults(detections, displaySize);
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+    faceapi.draw.drawDetections(canvas, resizedDetections);
+    faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+    faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+    console.log(detections[0].expressions)
+  }, 1000);
+})
+</script>
+</html>
